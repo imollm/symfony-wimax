@@ -41,5 +41,34 @@ class Station
      */
     private $antenna;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getAp(): ?Ap
+    {
+        return $this->ap;
+    }
+
+    public function setAp(?Ap $ap): self
+    {
+        $this->ap = $ap;
+
+        return $this;
+    }
+
+    public function getAntenna(): ?Antenna
+    {
+        return $this->antenna;
+    }
+
+    public function setAntenna(?Antenna $antenna): self
+    {
+        $this->antenna = $antenna;
+
+        return $this;
+    }
+
 
 }

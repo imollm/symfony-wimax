@@ -59,5 +59,70 @@ class Ap
      */
     private $antenna;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getSsid(): ?string
+    {
+        return $this->ssid;
+    }
+
+    public function setSsid(?string $ssid): self
+    {
+        $this->ssid = $ssid;
+
+        return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    public function getFrequency(): ?string
+    {
+        return $this->frequency;
+    }
+
+    public function setFrequency(?string $frequency): self
+    {
+        $this->frequency = $frequency;
+
+        return $this;
+    }
+
+    public function getBandwith(): ?string
+    {
+        return $this->bandwith;
+    }
+
+    public function setBandwith(?string $bandwith): self
+    {
+        $this->bandwith = $bandwith;
+
+        return $this;
+    }
+
+    public function getAntenna(): ?Antenna
+    {
+        return $this->antenna;
+    }
+
+    public function setAntenna(?Antenna $antenna): self
+    {
+        $this->antenna = $antenna;
+
+        return $this;
+    }
+
 
 }

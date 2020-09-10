@@ -59,5 +59,70 @@ class Router
      */
     private $station;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getSsid(): ?string
+    {
+        return $this->ssid;
+    }
+
+    public function setSsid(?string $ssid): self
+    {
+        $this->ssid = $ssid;
+
+        return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(?string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    public function getIp(): ?string
+    {
+        return $this->ip;
+    }
+
+    public function setIp(?string $ip): self
+    {
+        $this->ip = $ip;
+
+        return $this;
+    }
+
+    public function getSerial(): ?string
+    {
+        return $this->serial;
+    }
+
+    public function setSerial(?string $serial): self
+    {
+        $this->serial = $serial;
+
+        return $this;
+    }
+
+    public function getStation(): ?Station
+    {
+        return $this->station;
+    }
+
+    public function setStation(?Station $station): self
+    {
+        $this->station = $station;
+
+        return $this;
+    }
+
 
 }
