@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Antenna
  *
- * @ORM\Table(name="antenna", uniqueConstraints={@ORM\UniqueConstraint(name="wlan_mac_UNIQUE", columns={"wlan_mac"}), @ORM\UniqueConstraint(name="UNIQ_17B46F653EA3F4B", columns={"ip"}), @ORM\UniqueConstraint(name="UNIQ_17B46F64FECC1BF", columns={"lan_mac"})}, indexes={@ORM\Index(name="IDX_17B46F6A76ED395", columns={"user_id"})})
+ * @ORM\Table(name="antennas", uniqueConstraints={@ORM\UniqueConstraint(name="wlan_mac_UNIQUE", columns={"wlan_mac"}), @ORM\UniqueConstraint(name="UNIQ_17B46F653EA3F4B", columns={"ip"}), @ORM\UniqueConstraint(name="UNIQ_17B46F64FECC1BF", columns={"lan_mac"})}, indexes={@ORM\Index(name="IDX_17B46F6A76ED395", columns={"user_id"})})
  * @ORM\Entity
  */
 class Antenna

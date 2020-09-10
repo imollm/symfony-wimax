@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Router
  *
- * @ORM\Table(name="router", uniqueConstraints={@ORM\UniqueConstraint(name="UNIQ_45D2F22521BDB235", columns={"station_id"}), @ORM\UniqueConstraint(name="UNIQ_45D2F225D374C9DC", columns={"serial"})})
+ * @ORM\Table(name="routers", uniqueConstraints={@ORM\UniqueConstraint(name="UNIQ_45D2F22521BDB235", columns={"station_id"}), @ORM\UniqueConstraint(name="UNIQ_45D2F225D374C9DC", columns={"serial"})})
  * @ORM\Entity
  */
 class Router
