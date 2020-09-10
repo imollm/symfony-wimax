@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -86,6 +88,18 @@ class Antenna
      * })
      */
     private $user;
+
+    /**
+     * @var \Ap
+     * 
+     * @ORM\OneToMany(targetEntity=Ap::class, mappedBy="antenna")
+     */
+    private $ap;
+
+    public function __construct()
+    {
+        $this->ap = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -200,5 +214,9 @@ class Antenna
         return $this;
     }
 
+    public function getAp()
+    {
+        return $this->ap;
+    }
 
 }

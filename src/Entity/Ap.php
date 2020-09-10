@@ -52,7 +52,7 @@ class Ap
     /**
      * @var \Antenna
      *
-     * @ORM\ManyToOne(targetEntity="Antenna")
+     * @ORM\ManyToOne(targetEntity=Antenna::class, inversedBy="id")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="antenna_id", referencedColumnName="id")
      * })
