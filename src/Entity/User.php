@@ -233,8 +233,10 @@ class User implements UserInterface
     {
         return $this->payments;
     }
+
+    public function getUsername(): ?string
     {
-        return $this->isActive;
+        return $this->email;
     }
 
     public function getSalt()
