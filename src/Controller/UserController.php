@@ -44,6 +44,9 @@ class UserController extends AbstractController
             $em->persist($user);
             $em->flush();
 
+            $this->addFlash('notice', 'Usuario agregado correctamente');
+            $this->addFlash('class', 'success');
+
             return $this->redirectToRoute('home');
 
         }
