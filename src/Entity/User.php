@@ -78,11 +78,11 @@ class User
     private $updatedAt;
 
     /**
-     * @var string
+     * @var bool
      *
-     * @ORM\Column(name="username", type="string", length=25, nullable=false)
+     * @ORM\Column(name="is_active", type="boolean", nullable=false)
      */
-    private $username;
+    private $isActive;
 
     /**
      * @var bool
