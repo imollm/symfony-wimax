@@ -38,6 +38,12 @@ class User
     /**
      * @var string
      *
+     * @ORM\Column(name="role", type="string", length=50, nullable=true)
+     */
+    private $role;
+    /**
+     * @var string
+     *
      * @ORM\Column(name="phone", type="string", length=12, nullable=false)
      */
     private $phone;
@@ -111,6 +117,18 @@ class User
     public function getSurname(): ?string
     {
         return $this->surname;
+    }
+
+    public function setRole(string $role): self
+    {
+        $this->role = $role;
+
+        return $this;
+    }
+
+    public function getRole(): ?string
+    {
+        return $this->role;
     }
 
     public function setSurname(string $surname): self
