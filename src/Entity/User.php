@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * User
@@ -10,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="users", uniqueConstraints={@ORM\UniqueConstraint(name="UNIQ_8D93D649E7927C74", columns={"email"}), @ORM\UniqueConstraint(name="UNIQ_8D93D649F85E0677", columns={"username"}), @ORM\UniqueConstraint(name="UNIQ_8D93D649444F97DD", columns={"phone"})})
  * @ORM\Entity
  */
-class User
+class User implements UserInterface
 {
     /**
      * @var int
@@ -227,12 +228,18 @@ class User
         return $this->isActive;
     }
 
-    public function setIsActive(bool $isActive): self
+    public function getSalt()
     {
-        $this->isActive = $isActive;
-
-        return $this;
+        return null;
     }
 
+    public function getRoles()
+    {
+        return array($this->getRole());
+    }
 
+    public function eraseCredentials()
+    {
+
+}
 }
