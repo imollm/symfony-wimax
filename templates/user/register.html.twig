@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+
+    <h1 class="h2 p-4 text-center">{{ header }}</h1>
+
+    <div class="row justify-content-center">
+        <div class="col-4">
+            {{ form(form) }}
+        </div>
+    </div>
+
+{% endblock %}
