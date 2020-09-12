@@ -34,7 +34,7 @@ class RegisterUserType extends AbstractType
             ))
             ->add('phone', TextType::class, array(
                 'label' => 'Telefono',
-                'attr' => array('class' => 'mb-4 form-control')
+                'attr' => array('class' => 'mb-4 form-control', 'maxlength' => '12')
             ))
             ->add('address', TextType::class, array(
                 'label' => 'Dirección',
