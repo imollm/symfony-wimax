@@ -43,6 +43,7 @@ class User implements UserInterface
      * @ORM\Column(name="role", type="string", length=50, nullable=true)
      */
     private $role;
+
     /**
      * @var string
      *
@@ -217,14 +218,14 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getUsername(): ?string
+    public function getIsActive(): ?bool
     {
-        return $this->username;
+        return $this->isActive;
     }
 
-    public function setUsername(string $username): self
+    public function setIsActive(bool $isActive): self
     {
-        $this->username = $username;
+        $this->isActive = $isActive;
 
         return $this;
     }
@@ -251,6 +252,6 @@ class User implements UserInterface
 
     public function eraseCredentials()
     {
-
-}
+        
+    }
 }
