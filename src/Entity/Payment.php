@@ -59,10 +59,11 @@ class Payment
     /**
      * @var \User
      *
-     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="id")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      * })
+     * @ORM\OrderBy({"month" = "ASC", "year" = "ASC"})
      */
     private $user;
 

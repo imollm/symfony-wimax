@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -92,11 +93,16 @@ class User implements UserInterface
     private $isActive;
 
     /**
-     * @var bool
+     * @var \ArrayCollection
      *
-     * @ORM\Column(name="is_active", type="boolean", nullable=false)
+     * @ORM\OneToMany(targetEntity=Payment::class, mappedBy="user")
      */
-    private $isActive;
+    private $payments;
+
+    public function __construct()
+    {
+        $this->payments = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -223,7 +229,10 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getIsActive(): ?bool
+    public function getPayments()
+    {
+        return $this->payments;
+    }
     {
         return $this->isActive;
     }

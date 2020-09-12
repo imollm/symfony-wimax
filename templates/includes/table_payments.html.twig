@@ -1,0 +1,26 @@
+{% if app.user == null and app.user.payments|length == 0 %}
+    <h3 class="h4 text-center mt-5 font-italic">Aun no tienes pagos registrados</h3>
+{% else %}
+    <table class="table table-hover table-responsive-md">
+        <thead class="thead-dark">
+            <tr class="text-center">
+                <th scope="col">Que mes</th>
+                <th scope="col">Cuota</th>
+                <th scope="col">Cuando pague</th>
+            </tr>
+        </thead>
+        <tbody>
+                {% for payment in app.user.payments %}
+                <tr class="text-center">
+                    <td>{{ day(payment.month) ~ ' de ' ~ payment.year }}</td>
+                    <td>{{ payment.amount }}</td>
+                    <td>{{ payment.createdAt|date("d-m-Y") }}</td>
+                </tr>
+            {% else %}
+                <tr colspan="5">
+                    <td>Aun no tienes pagos registrados</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}

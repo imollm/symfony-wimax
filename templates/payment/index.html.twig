@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content  %}
+
+    <h1 class="h2 text-center p-4">{{ header }}</h1>
+
+    <div class="row justify-content-center">
+        <div class="col-6">
+            {% include "includes/table_payments.html.twig" %}
+        </div>
+    </div>
+
+{% endblock %}
