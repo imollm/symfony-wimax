@@ -1,0 +1,14 @@
+{% for flash_message in app.session.flashbag.get('notice') %}
+    <div class="container">
+        <div class='row justify-content-center pt-4'>
+            <div class='col-8'>
+                {% for flash_class in app.session.flashbag.get('class') %}
+                    <div class='alert alert-{{ flash_class }}'>
+                        <button type='button' class='close' data-dismiss='alert'>x</button>
+                        {{ flash_message }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endfor %}
