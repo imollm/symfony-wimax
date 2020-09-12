@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * User
@@ -27,6 +28,18 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=100, nullable=false)
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 100,
+     *      minMessage = "Your first name must be at least {{ limit }} characters long",
+     *      maxMessage = "Your first name cannot be longer than {{ limit }} characters",
+     *      allowEmptyString = false
+     * )
+     * @Assert\Regex(
+     *     pattern="/\d/",
+     *     match=false,
+     *     message="Your name cannot contain a number"
+     * )
      */
     private $name;
 
@@ -34,6 +47,18 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="surname", type="string", length=100, nullable=false)
+     * @Assert\Length(
+     *      min = 2,
+     *      max = 100,
+     *      minMessage = "Your surname must be at least {{ limit }} characters long",
+     *      maxMessage = "Your surname cannot be longer than {{ limit }} characters",
+     *      allowEmptyString = false
+     * )
+     * @Assert\Regex(
+     *     pattern="/\d/",
+     *     match=false,
+     *     message="Your name cannot contain a number"
+     * )
      */
     private $surname;
 
@@ -48,6 +73,18 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="phone", type="string", length=12, nullable=false)
+     * @Assert\Length(
+     *      min = 12,
+     *      max = 12,
+     *      minMessage = "Your phone number must be {{ limit }} numbers",
+     *      maxMessage = "Your phone number must be {{ limit }} numbers",
+     *      allowEmptyString = false
+     * )
+     * @Assert\Regex(
+     *     pattern="/\d/",
+     *     match=true,
+     *     message="Your phone cannot contain letters"
+     * )
      */
     private $phone;
 
@@ -55,6 +92,11 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="address", type="string", length=255, nullable=false)
+     * @Assert\Length(
+     *      max = 255,
+     *      maxMessage = "Your address cannot have more than {{ limit }} characters",
+     *      allowEmptyString = false
+     * )
      */
     private $address;
 
@@ -62,6 +104,10 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="email", type="string", length=255, nullable=false)
+     * @Assert\NotBlank()
+     * @Assert\Email(
+     *     message = "The email '{{ value }}' is not a valid email."
+     * )
      */
     private $email;
 
@@ -69,6 +115,18 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="password", type="string", length=255, nullable=false)
+    * @Assert\Length(
+     *      min = 8,
+     *      max = 16,
+     *      minMessage = "Password must be at least {{ limit }} characters long",
+     *      maxMessage = "Password cannot be longer than {{ limit }} characters",
+     *      allowEmptyString = false
+     * )
+     * @Assert\Regex(
+     *     pattern="/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?!.* )(?=.*[^a-zA-Z0-9]).{8,16}$/",
+     *     match=true,
+     *     message="Your password must be at least, one uppercase letter, one lowercase letter, one number and one special character"
+     * )
      */
     private $password;
 
