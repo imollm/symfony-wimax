@@ -96,9 +96,17 @@ class Antenna
      */
     private $ap;
 
+    /**
+     * @var \Ap
+     * 
+     * @ORM\OneToMany(targetEntity=Station::class, mappedBy="antenna")
+     */
+    private $station;
+
     public function __construct()
     {
         $this->ap = new ArrayCollection();
+        $this->station = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -217,6 +225,11 @@ class Antenna
     public function getAp()
     {
         return $this->ap;
+    }
+
+    public function getStation()
+    {
+        return $this->station;
     }
 
 }
