@@ -11,26 +11,41 @@
   <div class="collapse navbar-collapse" id="navbarNavDropdown">
 
     {% if app.user != null %}
-
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
           <a class="nav-link" href="{{path('home')}}">Inicio</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{path('my_payments')}}">Mi pagos</a>
+        {% if app.user.role == 'ROLE_USER' %}
+          <li class="nav-item">
+            <a class="nav-link" href="{{path('my_payments')}}">Mis pagos</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{path('user_edit', {'id':app.user.id})}}">Mis datos</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Contacto</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{{path('user_edit', {'id':app.user.id})}}">Mi datos</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Contacto</a>
-        </li>
+        {% endif %}
+        {% if app.user.role == 'ROLE_ADMIN' %}
+          <li class="nav-item">
+            <a class="nav-link" href="#">Usuarios</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Antenas</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Routers</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Pagos</a>
+          </li>
+        {% endif %}
       </ul>
-    <ul class="navbar-nav ml-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="{{path('app_logout')}}">Logout</a>
-        </li>
-    </ul>
+      <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="{{path('app_logout')}}">Logout</a>
+          </li>
+      </ul>
 
     {% else %}
       
