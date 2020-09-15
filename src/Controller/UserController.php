@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Payment;
 use App\Entity\User;
 use App\Form\RegisterUserType;
 use App\Form\UpdateUserType;
+use App\Repository\PaymentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -108,6 +110,26 @@ class UserController extends AbstractController
             'title' => 'Users',
             'header' => 'Listado de usuarios',
             'users' => $users
+        ]);
+    }
+
+    /**
+     * @Route("/user/{id}/details", name="user_details")
+     */
+    public function details($id)
+    {
+        $user = $this->getDoctrine()
+                    ->getRepository(User::class)
+                    ->find($id);
+
+        $connection = $this->getDoctrine()->getConnection();
+        $totalPaid = PaymentRepository::getTotalPaidByUserId($connection, $user->getId());
+        
+        return $this->render('user/details.html.twig', [
+            'title' => 'User Details',
+            'header' => 'Detalles del usuario',
+            'user' => $user,
+            'totalPaid' => $totalPaid
         ]);
     }
 }

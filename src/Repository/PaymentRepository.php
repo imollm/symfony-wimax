@@ -12,4 +12,12 @@ class PaymentRepository
         $prepare->execute();
         return $prepare->fetchAll();
     }
+
+    public static function getTotalPaidByUserId($connection, $user_id)
+    {
+        $sql = "SELECT SUM(amount) AS 'total' FROM payments WHERE user_id = ".$user_id; 
+        $prepare = $connection->prepare($sql);
+        $prepare->execute();
+        return $prepare->fetch();
+    }
 }

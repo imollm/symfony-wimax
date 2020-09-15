@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+
+    <h1 class="text-center p-4">{{ header }}</h1>
+
+    <div class="row">
+        <div class="col-sm-12 col-md-4 bg-danger">
+            {# Foto usuario #}
+            Foto usuario
+        </div>
+        <div class="col-sm-12 col-md-8">
+            {# Datos usuario #}
+            <div class="row">
+                <div class="col-sm-12 border rounded">
+                    <div class="text-center p-4">
+                        <h3 class="mt-3">Datos del usuario</h3>
+                        <ul class="list-unstyled">
+                            <li><span class="text-muted">Nombre: </span>{{ user.name }}</li>
+                            <li><span class="text-muted">Apellidos: </span>{{ user.surname }}</li>
+                            <li>
+                                <span class="text-muted">Email: </span>
+                                <a href="mailto:{{ user.email }}" class="text-decoration-none">{{ user.email }}</a>
+                            </li>
+                            <li><span class="text-muted">Telefono: </span>{{ user.phone }}</li>
+                            <li><span class="text-muted">Dirección: </span>{{ user.address }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-7 border rounded">
+                    {# Informacion de pagos #}
+                    <div class="text-center p-4">
+                        <h4 class="">Información sobre pagos</h4>
+                        <div>
+                            <span class="text-muted">
+                                Total pagado: 
+                            </span>
+                            {{totalPaid|slice(0,1).total}} €
+                        </div>
+                        <div>
+                            <span class="text-muted">
+                                Nº total de cuotas:  
+                            </span>
+                            {{user.payments|length}}
+                        </div>
+                        <div>
+                            <a href="{{path('my_payments', {'id':user.id})}}">Ir al detalle</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-5 border rounded">
+                    {# Acciones usuario #}
+                    <div class="text-center p-4">
+                        <h5 class="">Que quieres hacer con el?</h5>
+                        <span class="p-2">{% include "includes/user_buttons/edit.html.twig" %}</span>
+                        <span class="p-2">{% include "includes/user_buttons/delete.html.twig" %}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
