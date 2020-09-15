@@ -17,7 +17,7 @@
         </li>
         {% if app.user.role == 'ROLE_USER' %}
           <li class="nav-item">
-            <a class="nav-link" href="{{path('my_payments')}}">Mis pagos</a>
+            <a class="nav-link" href="{{path('my_payments', {'id':app.user.id})}}">Mis pagos</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{path('user_edit', {'id':app.user.id})}}">Mis datos</a>

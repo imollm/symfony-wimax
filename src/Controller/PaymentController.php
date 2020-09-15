@@ -3,25 +3,44 @@
 namespace App\Controller;
 
 use App\Entity\Payment;
+use App\Entity\User;
 use App\Repository\PaymentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class PaymentController extends AbstractController
 {
     /**
-     * @Route("/payments", name="my_payments")
+     * @Route("/payments/{id}", name="my_payments")
      */
-    public function index()
+    public function index($id)
     {
-        $user_id = $this->getUser()->getId();
-        $connection = $this->getDoctrine()->getConnection();
-        $years = PaymentRepository::findAllYearsOfUser($user_id, $connection);
+        $userId = $id;
+        $pageData = array(
+            'title' => '',
+            'header' => '',
+            'years' => '',
+            'payments' => ''
+        );
 
-        return $this->render('payment/index.html.twig', [
-            'title' => 'Payments',
-            'header' => 'Mis pagos',
-            'years' => $years
-        ]);
+        $userRepo = $this->getDoctrine()->getRepository(User::class);
+        $user = $userRepo->find($userId);
+
+        if ($this->getUser()->getRole() == 'ROLE_USER') {
+            $pageData['title'] = 'Mis Pagos';
+            $pageData['header'] = 'Detalle de mis pagos';
+        } elseif ($this->getUser()->getRole() == 'ROLE_ADMIN') {
+            $pageData['title'] = 'Detalle pagos';
+            $pageData['header'] = 'Pagos de ' . $user->getName() . ' ' . $user->getSurname();
+        }
+
+        $pageData['payments'] = $user->getPayments();
+
+        $connection = $this->getDoctrine()->getConnection();
+        $years = PaymentRepository::findAllYearsOfUser($userId, $connection);
+        $pageData['years'] = $years;
+
+        return $this->render('payment/index.html.twig', $pageData);
     }
 }
