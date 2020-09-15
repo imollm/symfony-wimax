@@ -17,8 +17,8 @@
                     <td>{{ payment.createdAt|date("d-m-Y") }}</td>
                 </tr>
             {% else %}
-                <tr colspan="5">
-                    <td>Aun no tienes pagos registrados</td>
+                <tr>
+                    <td colspan="3" class="text-center">Aun no tienes pagos registrados</td>
                 </tr>
             {% endfor %}
         </tbody>
