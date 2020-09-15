@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+
+    <h1 class="text-center p-4">{{ header }}</h1>
+
+    <div class="row justify-content-center">
+        <div class="col-sm-12 col-md-8">
+
+            {% if users != null and users|length > 0 %}
+        
+                {% include "includes/table_users.html.twig" %}
+
+            {% else %}
+
+                No hay usuarios que mostrar.
+                
+            {% endif %}
+
+        </div>
+    </div>
+
+{% endblock %}

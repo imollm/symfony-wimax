@@ -93,4 +93,21 @@ class UserController extends AbstractController
             'header' => 'Edita tus datos'
         ]);
     }
+
+    /**
+     * @Route("/users", name="list_users")
+     */
+    public function listAllUsers(Request $request)
+    {
+        $role = $request->query->get('role');
+        $users = $this->getDoctrine()
+                        ->getRepository(User::class)
+                        ->findByRole($role);
+
+        return $this->render('user/list.html.twig', [
+            'title' => 'Users',
+            'header' => 'Listado de usuarios',
+            'users' => $users
+        ]);
+    }
 }

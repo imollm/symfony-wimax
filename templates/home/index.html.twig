@@ -22,7 +22,7 @@
         {% if app.user.role == 'ROLE_ADMIN' %}
             <div class="row">
                 <div class="col-12 text-center p-4">
-                    <a href="#" class="btn btn-lg btn-outline-dark">Usuarios</a>
+                    <a href="{{path('list_users', {'role':'ROLE_USER'})}}" class="btn btn-lg btn-outline-dark">Usuarios</a>
                 </div>
                 <div class="col-12 text-center p-4">
                     <a href="#" class="btn btn-lg btn-outline-dark">Antenas</a>
