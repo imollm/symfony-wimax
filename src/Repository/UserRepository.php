@@ -11,7 +11,7 @@ class UserRepository extends EntityRepository
         return $this->getEntityManager()
         ->createQuery(
             'SELECT u 
-            FROM App\User u 
+            FROM App\Entity\User u 
             WHERE u.role = :role'
         )
         ->setParameter('role', $role)
