@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Antenna;
 use App\Entity\Payment;
 use App\Entity\User;
 use App\Form\RegisterUserType;
 use App\Form\UpdateUserType;
+use App\Repository\AntennaRepository;
 use App\Repository\PaymentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -130,6 +132,39 @@ class UserController extends AbstractController
             'header' => 'Detalles del usuario',
             'user' => $user,
             'totalPaid' => $totalPaid
+        ]);
+    }
+
+    /**
+     * @Route("/user/delete/{id}", name="user_delete")
+     */
+    public function delete(Request $request, User $user)
+    {
+        if(!$user){
+            $this->addFlash('notice', 'Error al borrar el usuario');
+            $this->addFlash('class', 'danger');
+            return $this->redirectToRoute('home');
+        }
+
+        // When a ADMIN remove a user, system delete her payments and set NULL antennas he/she have.
+        try {
+            $connection = $this->getDoctrine()->getConnection();
+
+            PaymentRepository::deleteAllPaymentsByUserId($connection, $user);
+            AntennaRepository::setNullUserId($connection, $user);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($user);
+            $em->flush();
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+
+        $this->addFlash('notice', 'Usuario borrado correctamente');
+        $this->addFlash('class', 'success');
+
+        return $this->redirectToRoute('list_users', [
+            'role' => 'ROLE_USER'
         ]);
     }
 }
