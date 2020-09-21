@@ -61,6 +61,13 @@ class Antenna
     /**
      * @var string|null
      *
+     * @ORM\Column(name="model", type="string", length=100, nullable=true)
+     */
+    private $model;
+
+    /**
+     * @var string|null
+     *
      * @ORM\Column(name="name", type="string", length=100, nullable=true)
      */
     private $name;
@@ -97,7 +104,7 @@ class Antenna
     private $ap;
 
     /**
-     * @var \Ap
+     * @var \Station
      * 
      * @ORM\OneToMany(targetEntity=Station::class, mappedBy="antenna")
      */
@@ -230,6 +237,64 @@ class Antenna
     public function getStation()
     {
         return $this->station;
+    }
+
+    public function getModel(): ?string
+    {
+        return $this->model;
+    }
+
+    public function setModel(?string $model): self
+    {
+        $this->model = $model;
+
+        return $this;
+    }
+
+    public function addAp(Ap $ap): self
+    {
+        if (!$this->ap->contains($ap)) {
+            $this->ap[] = $ap;
+            $ap->setAntenna($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAp(Ap $ap): self
+    {
+        if ($this->ap->contains($ap)) {
+            $this->ap->removeElement($ap);
+            // set the owning side to null (unless already changed)
+            if ($ap->getAntenna() === $this) {
+                $ap->setAntenna(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function addStation(Station $station): self
+    {
+        if (!$this->station->contains($station)) {
+            $this->station[] = $station;
+            $station->setAntenna($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStation(Station $station): self
+    {
+        if ($this->station->contains($station)) {
+            $this->station->removeElement($station);
+            // set the owning side to null (unless already changed)
+            if ($station->getAntenna() === $this) {
+                $station->setAntenna(null);
+            }
+        }
+
+        return $this;
     }
 
 }
