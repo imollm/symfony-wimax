@@ -27,4 +27,22 @@ class AntennaController extends AbstractController
             'antennas' => $antennas
         ]);
     }
+
+    /**
+     * @Route("/getImage/{file}", name="get_antenna_image")
+     */
+    public function getImage(Request $request)
+    {
+        if($request){
+            $fileName = $request->attributes->get('file');
+            $filePath = "assets/img/antennas/" . $fileName . ".jpg";
+           
+            $response = new BinaryFileResponse($filePath);
+            $response->setContentDisposition(
+                ResponseHeaderBag::DISPOSITION_INLINE,
+                $fileName
+            );
+            return $response;
+        }   
+    }
 }
