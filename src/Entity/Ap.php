@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -58,6 +59,18 @@ class Ap
      * })
      */
     private $antenna;
+
+    /**
+     * @var \ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity=Station::class, mappedBy="ap")
+     */
+    private $stations;
+
+    public function __construct()
+    {
+        $this->stations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -124,5 +137,13 @@ class Ap
         return $this;
     }
 
+    public function getStations()
+    {
+        return $this->stations;
+    }
 
+    public function setStations(?ArrayCollection $stations)
+    {
+        $this->stations = $stations;
+    }
 }
