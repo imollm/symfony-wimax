@@ -12,6 +12,7 @@
 /migrations/model.mwb
 /migrations/model.mwb.bak
 /public/.htaccess
+/public/assets/img/antennas
 ###< symfony/framework-bundle ###
 
 ###> symfony/phpunit-bridge ###
