@@ -40,3 +40,5 @@ security:
         - { path: ^/my_payments, roles: ROLE_ADMIN }
         - { path: ^/user/edit/, roles: ROLE_ADMIN }
         - { path: ^/user/delete/, roles: ROLE_ADMIN }
+        - { path: ^/antennas, roles: ROLE_ADMIN }
+        - { path: ^/antenna/details, roles: ROLE_ADMIN }
