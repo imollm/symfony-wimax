@@ -27,7 +27,7 @@
                             <li><span class='font-weight-bold'>Ubicación: </span><a href="{{mapsUrl ~ antenna.latitude ~ ',' ~ antenna.longitude}}">Ver ubicación</a> </li>
                         </ul>
                     </p>
-                    <a href="#" class="btn btn-primary">Ir a detalles</a>
+                    <a href="{{path('antenna_details', {'id':antenna.id})}}" class="btn btn-primary">Ir a detalles</a>
                 </div>
                 <div class="card-footer">
                     <small class="text-muted">Alta en el sistema {{antenna.createdAt|date('d-m-Y')}}</small>

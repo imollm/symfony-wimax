@@ -29,6 +29,23 @@ class AntennaController extends AbstractController
     }
 
     /**
+     * @Route("/antenna/{id}/details", name="antenna_details")
+     */
+    public function details(Antenna $antenna)
+    {
+        if (!$antenna) {
+            $this->addFlash('notice', 'No se ha podido mostar la antenna');
+            $this->addFlash('class', 'danger');
+            return $this->redirectToRoute('antennas');
+        }
+        return $this->render('antenna/details.html.twig', [
+            'title' => 'Antenna details',
+            'header' => 'Detalles de la antena',
+            'antenna' => $antenna
+        ]);
+    }
+
+    /**
      * @Route("/getImage/{file}", name="get_antenna_image")
      */
     public function getImage(Request $request)
@@ -37,7 +54,7 @@ class AntennaController extends AbstractController
             $fileName = $request->attributes->get('file');
             $filePath = "assets/img/antennas/" . $fileName . ".jpg";
            
-            $response = new BinaryFileResponse($filePath);
+            $response = new BinaryFileResponse($filePath, 200);
             $response->setContentDisposition(
                 ResponseHeaderBag::DISPOSITION_INLINE,
                 $fileName

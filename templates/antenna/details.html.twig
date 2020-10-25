@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content  %}
+
+    <h1 class="text-center p-4">{{ header }}</h1>
+    {{ dump(antenna) }}
+    {% include "includes/antennaDetails.html.twig" %}
+
+{% endblock %}
