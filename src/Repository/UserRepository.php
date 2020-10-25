@@ -2,10 +2,18 @@
 
 namespace App\Repository;
 
-use Doctrine\ORM\EntityRepository;
+use App\Entity\Antenna;
+use App\Entity\User;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
 
-class UserRepository extends EntityRepository
+class UserRepository extends ServiceEntityRepository
 {
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Antenna::class);
+    }
+
     public function findByRole(string $role)
     {
         return $this->getEntityManager()
@@ -16,5 +24,20 @@ class UserRepository extends EntityRepository
         )
         ->setParameter('role', $role)
         ->getResult();
+    }
+
+    public function findAll()
+    {
+        return $this->getEntityManager()
+            ->createQuery(
+                'SELECT u.name, u.id
+                FROM App\Entity\User u'
+            )
+            ->getResult();
+    }
+
+    public function findById($id) {
+        $user = $this->getEntityManager()->find(User::class, $id);
+        return $user;
     }
 }

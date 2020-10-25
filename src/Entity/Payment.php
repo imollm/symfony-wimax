@@ -142,7 +142,7 @@ class Payment
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getUser()
     {
         return $this->user;
     }
@@ -154,12 +154,12 @@ class Payment
         return $this;
     }
 
-    public function getAntenna(): ?Antenna
+    public function getAntenna()
     {
         return $this->antenna;
     }
 
-    public function setAntenna(?Antenna $antenna): self
+    public function setAntenna($antenna): self
     {
         $this->antenna = $antenna;
 

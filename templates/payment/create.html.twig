@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+
+    <h1 class="h2 p-4 text-center">{{ header }}</h1>
+
+    {# <div class="row justify-content-center">
+        <div class="col-4">
+            {{ form(form) }}
+        </div>
+    </div> #}
+
+    <div class="container">
+        <div class="row d-flex justify-content-center">
+            <div class="col-4">
+                <form id="create_payment" method="post" action="{{path('save_payment')}}">
+                <div id="create_payment">
+                    <div>
+                        <label for="create_payment_user" class="required">Usuario</label>
+                        <select id="create_payment_user" name="user" class="mb-4 form-control">
+                            <option value="" selected>-</option>
+                        </select>
+                    </div>
+                    <div style="display: none;">
+                        <label for="create_payment_month" class="required">Mes</label>
+                        <select id="create_payment_month" name="month" class="mb-4 form-control">
+                            <option value="1">Enero</option>
+                            <option value="2">Febrero</option>
+                            <option value="3">Marzo</option>
+                            <option value="4">Abril</option>
+                            <option value="5">Mayo</option>
+                            <option value="6">Junio</option>
+                            <option value="7">Julio</option>
+                            <option value="8">Agosto</option>
+                            <option value="9">Septiembre</option>
+                            <option value="10">Octubre</option>
+                            <option value="11">Noviembre</option>
+                            <option value="12">Diciembre</option>
+                        </select>
+                    </div>
+                    <div style="display: none;">
+                        <label for="create_payment_year" class="required">Año</label>
+                        <select id="create_payment_year" name="year" class="mb-4 form-control">
+                            <option value="2020">2020</option>
+                            <option value="2021">2021</option>
+                            <option value="2022">2022</option>
+                        </select>
+                    </div>
+                    <div style="display: none;">
+                        <label for="create_payment_amount" class="required">Cantidad</label>
+                        <input type="text" id="create_payment_amount" name="amount" required="required" class="mb-4 form-control">
+                    </div>
+                    <div style="display: none;">
+                        <button type="submit" class="mb-4 btn btn-outline-dark">
+                            Guardar
+                        </button>
+                    </div>
+                    <input type="hidden" name="token" value="{{ csrf_token('save-payment') }}"/>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+

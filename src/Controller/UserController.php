@@ -116,6 +116,18 @@ class UserController extends AbstractController
     }
 
     /**
+     * @Route("/getUsers", name="get_users")
+     */
+    public function getUsers() {
+        $connection = $this->getDoctrine()->getConnection();
+        $sql = "SELECT id, name FROM users WHERE role = 'ROLE_USER'";
+        $prepare = $connection->prepare($sql);
+        $prepare->execute();
+        $users = $prepare->fetchAll();
+        
+        return $this->json(json_encode($users), 200);
+    }
+    /**
      * @Route("/user/{id}/details", name="user_details")
      */
     public function details($id)
