@@ -158,9 +158,17 @@ class User implements UserInterface
      */
     private $payments;
 
+    /**
+     * @var \ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity=Antenna::class, mappedBy="user")
+     */
+    private $antennas;
+
     public function __construct()
     {
         $this->payments = new ArrayCollection();
+        $this->antennas = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -272,6 +280,18 @@ class User implements UserInterface
     public function setUpdatedAt(\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getAntennas()
+    {
+        return $this->antennas;
+    }
+
+    public function setAntennas($antennas)
+    {
+        $this->antennas = $antennas;
 
         return $this;
     }

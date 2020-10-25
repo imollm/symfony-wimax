@@ -5,7 +5,6 @@ namespace App\Repository;
 use App\Entity\Antenna;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 class AntennaRepository extends ServiceEntityRepository
@@ -19,5 +18,9 @@ class AntennaRepository extends ServiceEntityRepository
         $sql = "UPDATE antennas SET user_id = NULL WHERE user_id = " . $user->getId(); 
         $prepare = $connection->prepare($sql);
         $prepare->execute();
+    }
+
+    public function findById($id) {
+        return $this->getEntityManager()->find(Antenna::class, $id);
     }
 }

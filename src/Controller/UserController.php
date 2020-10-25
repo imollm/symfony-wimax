@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Antenna;
-use App\Entity\Payment;
 use App\Entity\User;
 use App\Form\RegisterUserType;
 use App\Form\UpdateUserType;
@@ -11,6 +10,7 @@ use App\Repository\AntennaRepository;
 use App\Repository\PaymentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -178,5 +178,29 @@ class UserController extends AbstractController
         return $this->redirectToRoute('list_users', [
             'role' => 'ROLE_USER'
         ]);
+    }
+
+    /**
+     * @Route("/user/{id}/antennas", name="user_have_these_antennas")
+     */
+    public function myAntennas($id)
+    {
+        $antennaRepo = $this->getDoctrine()->getRepository(Antenna::class);
+        $userRepo = $this->getDoctrine()->getRepository(User::class);
+
+        $user = $userRepo->find($id);
+        $antennas = $antennaRepo->findBy(array('user' => $user));
+
+        $jsonAntennas = array();
+
+        foreach ($antennas as $key => $antenna) {
+            $jsonAntennas[$key] = array();
+            $jsonAntennas[$key]['id'] = $antenna->getId();
+            $jsonAntennas[$key]['name'] = $antenna->getName();
+        }
+
+        return $this->json(array(
+            'antennas' => $jsonAntennas
+        ));
     }
 }
