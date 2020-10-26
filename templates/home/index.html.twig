@@ -12,7 +12,7 @@
         {% if app.user.role == 'ROLE_USER' %}
             <div class="row">
                 <div class="col-12 text-center p-4">
-                    <a href="{{path('my_payments', {'id':app.user.id})}}" class="btn btn-lg btn-outline-dark">Mis pagos</a>
+                    <a href="{{path('list_payments', {'id':app.user.id})}}" class="btn btn-lg btn-outline-dark">Mis pagos</a>
                 </div>
                 <div class="col-12 text-center p-4">
                     <a href="{{path('user_edit', {'id':app.user.id})}}" class="btn btn-lg btn-outline-dark">Mis datos</a>
@@ -31,7 +31,7 @@
                     <a href="#" class="btn btn-lg btn-outline-dark">Routers</a>
                 </div>
                 <div class="col-12 text-center p-4">
-                    <a href="{{path('all_payments')}}" class="btn btn-lg btn-outline-dark">Pagos</a>
+                    <a href="{{path('list_payments')}}" class="btn btn-lg btn-outline-dark">Pagos</a>
                 </div>
             </div>
         {% endif %}

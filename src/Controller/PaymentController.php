@@ -15,58 +15,53 @@ use Symfony\Component\Routing\Annotation\Route;
 class PaymentController extends AbstractController
 {
     /**
-     * @Route("/payments", name="all_payments")
+     * @Route("/payments/{id}", defaults={"id" = null}, name="list_payments")
      */
-    public function allPayments()
-    {
-        $pageData = array(
-            'title' => 'Pagos clientes',
-            'header' => 'Pagos clientes',
-            'years' => '',
-            'payments' => ''
-        );
-
-        if ($this->getUser()->getRoles()[0] !== 'ROLE_ADMIN') {
-            return $this->redirectToRoute('home');
-        }
-
-        $connection = $this->getDoctrine()->getConnection();
-        $payments = PaymentRepository::getAllPayments($connection);
-        $pageData['payments'] = $payments;
-
-        return $this->render('payment/all_payments.html.twig', $pageData);
-    }
-    /**
-     * @Route("/payments/{id}", name="my_payments")
-     */
-    public function paymentsByUserId($id)
-    {
-        $userId = $id;
+    public function list(Request $request)
+    {   
         $pageData = array(
             'title' => '',
             'header' => '',
             'years' => '',
+            'users' => '',
             'payments' => ''
         );
 
-        $userRepo = $this->getDoctrine()->getRepository(User::class);
-        $user = $userRepo->find($userId);
+        $role = $this->getUser()->getRoles()[0];
+        $userId = $this->getUser()->getId();
 
-        if ($this->getUser()->getRole() == 'ROLE_USER') {
-            $pageData['title'] = 'Mis Pagos';
-            $pageData['header'] = 'Detalle de mis pagos';
-        } elseif ($this->getUser()->getRole() == 'ROLE_ADMIN') {
-            $pageData['title'] = 'Detalle pagos';
-            $pageData['header'] = 'Pagos de ' . $user->getName() . ' ' . $user->getSurname();
+        $filters = array(
+            'role' => $role,
+            'userId' => $userId,
+            'year' => NULL,
+            'user' => NULL
+        );
+
+        if ($request) {
+            $filters['year'] = 
+                ($request->get('year') !== 'Choose...') ? 
+                    $request->get('year') : NULL;
+            $filters['user'] = 
+                ($request->get('user_id') !== 'Choose...') ? 
+                    $request->get('user_id') : NULL;
         }
 
-        $pageData['payments'] = $user->getPayments();
-
         $connection = $this->getDoctrine()->getConnection();
-        $years = PaymentRepository::findAllYearsOfUser($connection, $userId);
-        $pageData['years'] = $years;
 
-        return $this->render('payment/index.html.twig', $pageData);
+        if ($role == 'ROLE_ADMIN') {
+            $pageData['title'] = 'Listado pagos';
+            $pageData['header'] = 'Pagos clientes';
+            $pageData['users'] = PaymentRepository::findUsers($connection);
+            
+        } elseif ($role == 'ROLE_USER') {
+            $pageData['title'] = 'Listado pagos';
+            $pageData['header'] = 'Mis pagos';
+        }
+
+        $pageData['years'] = PaymentRepository::findYears($connection, $role, $userId);
+        $pageData['payments'] = PaymentRepository::getPayments($connection, $filters);
+
+        return $this->render('payment/list.html.twig', $pageData);
     }
 
     /**
@@ -100,12 +95,12 @@ class PaymentController extends AbstractController
             // var_dump($year);
             // var_dump($amount);
             // var_dump($token);
-            if($this->isCsrfTokenValid('save-payment', $token)) {
+            if ($this->isCsrfTokenValid('save-payment', $token)) {
                 if (
-                    !is_null($antennaId) && 
-                    !is_null($userId) && 
-                    !is_null($month) && 
-                    !is_null($year) && 
+                    !is_null($antennaId) &&
+                    !is_null($userId) &&
+                    !is_null($month) &&
+                    !is_null($year) &&
                     !is_null($amount)
                 ) {
                     $antennaRepo = new AntennaRepository($this->getDoctrine());
@@ -121,11 +116,10 @@ class PaymentController extends AbstractController
                     $payment->setAmount($amount);
                     $payment->setCreatedAt(new \DateTime());
                     $payment->setUpdatedAt(new \DateTime());
-                    
+
                     $em = $this->getDoctrine()->getManager();
                     $em->persist($payment);
                     $em->flush();
-
                 } else {
                     $this->addFlash('danger', 'Error al guardar el pago');
                 }
