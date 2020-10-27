@@ -68,29 +68,38 @@ class PaymentRepository
     public static function getPayments($connection, $filters)
     {
         $role = $filters['role'];
+        $userId = $filters['userId']; // GET param
+        $user = $filters['user']; // Filter param
+        $year = $filters['year']; // Filter param
 
         $sql = "SELECT  p.month,p.year,p.amount,p.created_at ";
         if ($role == 'ROLE_ADMIN') {
-            $sql .= ", CONCAT(u.name, ' ', u.surname) AS 'user', u.id ";
+            $sql .= ", CONCAT(u.name, ' ', u.surname) AS 'user', u.id AS 'userId' ";
         }
         $sql .= "FROM payments p ";                        
         if ($role == 'ROLE_ADMIN') {
             $sql .= "INNER JOIN users u ON p.user_id = u.id ";
         }
-        if ($role == 'ROLE_USER' || $filters['year'] !== NULL || $filters['user'] !== NULL) {
+        if ($role == 'ROLE_USER' || 
+            ($year !== NULL && $year !== 'todos') || 
+            ($user !== NULL && $user !== 'todos') ||
+            ($role == 'ROLE_ADMIN' && $userId !== NULL)) {
+
             $sql .= "WHERE ";
+
+            if ($role == 'ROLE_USER' || ($role == 'ROLE_ADMIN' && $userId !== NULL)) {
+                $sql .= "p.user_id = {$userId} ";
+            }
+            if ($year !== NULL && $year !== 'todos') {
+                if ($role == 'ROLE_USER') $sql .= "AND ";
+                $sql .= "p.year = {$filters['year']} ";
+                if ($user !== NULL && $user !== 'todos') $sql .= "AND ";
+            }
+            if ($user !== NULL && $user !== 'todos') {
+                $sql .= "p.user_id = {$filters['user']} ";
+            }
         }
-        if ($role == 'ROLE_USER') {
-            $sql .= "p.user_id = {$filters['userId']} ";
-        }
-        if ($filters['year'] !== NULL) {
-            if ($role == 'ROLE_USER') $sql .= "AND ";
-            $sql .= "p.year = {$filters['year']} ";
-            if ($role == 'ROLE_ADMIN') $sql .= "AND ";
-        }
-        if ($filters['user'] !== NULL) {
-            $sql .= "p.user_id = {$filters['user']} ";
-        }
+
         $sql .= "ORDER BY DATE(p.created_at) DESC";
         if ($role == 'ROLE_ADMIN') {
             $sql .= ", u.name ASC";

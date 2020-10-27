@@ -20,6 +20,7 @@
                     </div>
                     <select class="custom-select" id="inputGroupSelect01" name="year">
                         <option selected>Choose...</option>
+                        <option value="todos">Todos</option>
                         {% for year in years %}
                             <option value="{{ year.year }}">{{ year.year }}</option>
                         {% endfor %}
@@ -38,6 +39,7 @@
                     </div>
                     <select class="custom-select" id="inputGroupSelect01" name="user_id">
                         <option selected>Choose...</option>
+                        <option value="todos">Todos</option>
                         {% for user in users %}
                             <option value="{{ user.id }}">{{ user.user }}</option>
                         {% endfor %}

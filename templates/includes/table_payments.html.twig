@@ -7,6 +7,9 @@
                 <th scope="col">Que mes</th>
                 <th scope="col">Cuota</th>
                 <th scope="col">Cuando pague</th>
+                {% if app.user.role == 'ROLE_ADMIN' %}
+                    <th scope="col">Usuario</th>
+                {% endif %}
             </tr>
         </thead>
         <tbody>
@@ -15,6 +18,13 @@
                     <td>{{ day(payment.month) ~ ' de ' ~ payment.year }}</td>
                     <td>{{ payment.amount }}</td>
                     <td>{{ payment.created_at|date("d-m-Y") }}</td>
+                    {% if app.user.role == 'ROLE_ADMIN' %}
+                        <th scope="col">
+                            <a href="{{path('user_details', {'id':payment.userId})}}">
+                                {{payment.user}}
+                            </a>
+                        </th>
+                    {% endif %}
                 </tr>
             {% else %}
                 <tr>

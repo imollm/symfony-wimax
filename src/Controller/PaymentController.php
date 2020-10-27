@@ -30,6 +30,13 @@ class PaymentController extends AbstractController
         $role = $this->getUser()->getRoles()[0];
         $userId = $this->getUser()->getId();
 
+        if ($role == 'ROLE_ADMIN' && $request->get('id') !== NULL) {
+            $userId = $request->get('id');
+        }elseif ($role == 'ROLE_ADMIN' && $request->get('id') == NULL) {
+            $userId = NULL;
+        }
+        // var_dump($userId);die();
+
         $filters = array(
             'role' => $role,
             'userId' => $userId,
@@ -38,19 +45,21 @@ class PaymentController extends AbstractController
         );
 
         if ($request) {
-            $filters['year'] = 
-                ($request->get('year') !== 'Choose...') ? 
-                    $request->get('year') : NULL;
-            $filters['user'] = 
-                ($request->get('user_id') !== 'Choose...') ? 
-                    $request->get('user_id') : NULL;
+            $filters['year'] = ($request->get('year') !== 'Choose...') ? $request->get('year') : NULL;
+            $filters['user'] = ($request->get('user_id') !== 'Choose...') ? $request->get('user_id') : NULL;
         }
 
         $connection = $this->getDoctrine()->getConnection();
 
         if ($role == 'ROLE_ADMIN') {
             $pageData['title'] = 'Listado pagos';
-            $pageData['header'] = 'Pagos clientes';
+            if ($request->get('id') !== NULL) {
+                $userRepo = new UserRepository($this->getDoctrine());
+                $user = $userRepo->findById($request->get('id'));
+                $pageData['header'] = 'Pagos de ' . $user->getName() . ' ' . $user->getSurname();
+            }else {
+                $pageData['header'] = 'Pagos clientes';
+            }
             $pageData['users'] = PaymentRepository::findUsers($connection);
             
         } elseif ($role == 'ROLE_USER') {

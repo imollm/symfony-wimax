@@ -28,7 +28,7 @@
         {% endif %}
         {% if app.user.role == 'ROLE_ADMIN' %}
           <li class="nav-item">
-            <a class="nav-link" href="#">Usuarios</a>
+            <a class="nav-link" href="{{path('list_users', {'role':'ROLE_USER'})}}">Usuarios</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{path('antennas')}}">Antenas</a>
