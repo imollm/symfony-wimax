@@ -1,0 +1,14 @@
+<h1>Hola {{ userName }}</h1>
+
+<p>
+    Nos complace informarle que el pago realizado por el servicio de Internet se ha registrado correctamente.
+</p>
+
+<p>
+    <strong>Detalles del pago</strong>
+    <ul>
+        <li><strong>Mes pagado:</strong> {{ day(paymentMonth) }} de {{ paymentYear }}</li>
+        <li><strong>Cantidad:</strong> {{ paymentAmount }} €</li>
+        <li><strong>Fecha registro pago:</strong> {{ today|date("d/m/Y") }}</li>
+    </ul>
+</p>
