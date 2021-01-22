@@ -20,7 +20,8 @@ class AntennaRepository extends ServiceEntityRepository
         $prepare->execute();
     }
 
-    public function findById($id) {
+    public function findById($id): ?object
+    {
         return $this->getEntityManager()->find(Antenna::class, $id);
     }
 }

@@ -11,7 +11,7 @@ class UserRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Antenna::class);
+        parent::__construct($registry, User::class);
     }
 
     public function findByRole(string $role)
@@ -36,8 +36,8 @@ class UserRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function findById($id) {
-        $user = $this->getEntityManager()->find(User::class, $id);
-        return $user;
+    public function findById($id)
+    {
+        return $this->getEntityManager()->find(User::class, $id);
     }
 }
