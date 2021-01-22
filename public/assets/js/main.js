@@ -2,7 +2,11 @@
 
 $(document).ready(function () {
 
-    const host = 'http://wimax.com.devel/';
+    let host = 'http://wimax.com.devel/';
+
+    if (window.location.host !== 'localhost' && window.location.host !== '192.168.1.73') {
+        host += 'wimax/public/';
+    }
 
     deleteModalGetUserId(host);
 
@@ -71,9 +75,12 @@ function showOtherInputsWhenUserIsClicked(host) {
         var form = $('#create_payment');
         let userId = $(this).val();
 
-        let url = host + 'user/' + userId + '/antennas';
+        // When backend data is reviced and is printed all input fields... I create a input hidden to put a select:disabled value (select:disabled) don't give the value on form submit
+        let inputUserIdHidden = '<input type="hidden" value="'+ userId +'" name="user_id">';
+        $(this).after(inputUserIdHidden);
+        $(this).attr('disabled', true);
 
-        // $(this).attr('disabled', 'disabled');
+        let url = host + 'user/' + userId + '/antennas';
 
         $.ajax({
             type: "get",
