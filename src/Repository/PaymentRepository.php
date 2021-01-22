@@ -109,4 +109,27 @@ class PaymentRepository
         $prepare->execute();
         return $prepare->fetchAll();
     }
+
+    /**
+     * Determine if the payment already exists
+     * @param $userId
+     * @param $antennaId
+     * @param $month
+     * @param $year
+     * @param $connection
+     * @return bool
+     */
+    public static function isAlreadyPaid($userId, $antennaId, $month, $year, $connection)
+    {
+        $sql = "SELECT COUNT(*) as 'count'
+                FROM payments 
+                WHERE user_id = " . $userId . " AND 
+                      antenna_id = " . $antennaId . " AND 
+                      month = " . $month . " AND 
+                      year = " . $year;
+
+        $prepare = $connection->prepare($sql);
+        $prepare->execute();
+        return $prepare->fetch()['count'] > 0;
+    }
 }
