@@ -1,4 +1,4 @@
-{% if app.user == null and payments|length == 0 %}
+{% if app.user == null or payments|length == 0 %}
     <h3 class="h4 text-center mt-5 font-italic">Aun no tienes pagos registrados</h3>
 {% else %}
     <table class="table table-hover table-responsive-md">
@@ -7,6 +7,9 @@
                 <th scope="col">Que mes</th>
                 <th scope="col">Cuota</th>
                 <th scope="col">Cuando pague</th>
+                {% if app.user.role == 'ROLE_ADMIN' %}
+                    <th scope="col">Usuario</th>
+                {% endif %}
             </tr>
         </thead>
         <tbody>
@@ -14,7 +17,14 @@
                 <tr class="text-center">
                     <td>{{ day(payment.month) ~ ' de ' ~ payment.year }}</td>
                     <td>{{ payment.amount }}</td>
-                    <td>{{ payment.createdAt|date("d-m-Y") }}</td>
+                    <td>{{ payment.created_at|date("d-m-Y") }}</td>
+                    {% if app.user.role == 'ROLE_ADMIN' %}
+                        <th scope="col">
+                            <a href="{{path('user_details', {'id':payment.userId})}}">
+                                {{payment.user}}
+                            </a>
+                        </th>
+                    {% endif %}
                 </tr>
             {% else %}
                 <tr>

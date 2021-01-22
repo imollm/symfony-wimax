@@ -43,12 +43,12 @@
                         </div>
                         <div>
                             <span class="text-muted">
-                                Nº total de cuotas:  
+                                Nº total de cuotas:
                             </span>
                             {{user.payments|length}}
                         </div>
                         <div>
-                            <a href="{{path('my_payments', {'id':user.id})}}">Ir al detalle</a>
+                            <a href="{{path('list_payments', {'id':user.id})}}">Ir al detalle</a>
                         </div>
                     </div>
                 </div>

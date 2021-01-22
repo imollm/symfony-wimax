@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content  %}
+
+    <h1 class="text-center p-4">{{ header }}</h1>
+
+    {% if years|length > 0 or users|length > 0 %}
+
+        <form method="post" action="{{path('list_payments')}}">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+        {% if years|length > 0 %}
+
+            <div class="form-row">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroupSelect01">Año</label>
+                    </div>
+                    <select class="custom-select" id="inputGroupSelect01" name="year">
+                        <option selected>Choose...</option>
+                        <option value="todos">Todos</option>
+                        {% for year in years %}
+                            <option value="{{ year.year }}">{{ year.year }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+        {% endif %}
+
+        {% if users|length > 0 %}
+
+            <div class="form-row">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroupSelect01">Usuarios</label>
+                    </div>
+                    <select class="custom-select" id="inputGroupSelect01" name="user_id">
+                        <option selected>Choose...</option>
+                        <option value="todos">Todos</option>
+                        {% for user in users %}
+                            <option value="{{ user.id }}">{{ user.user }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+        {% endif %}
+
+                    <div class="input-group mb-3">
+                        <input type="submit" class="btn btn-sm btn-outline-dark" value="Filtrar">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% endif %}
+    
+    <div class="row justify-content-center">
+        <div class="col-6">
+            {% include "includes/table_payments.html.twig" %}
+        </div>
+    </div>
+
+{% endblock %}

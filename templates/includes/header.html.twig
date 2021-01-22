@@ -17,7 +17,7 @@
         </li>
         {% if app.user.role == 'ROLE_USER' %}
           <li class="nav-item">
-            <a class="nav-link" href="{{path('my_payments', {'id':app.user.id})}}">Mis pagos</a>
+            <a class="nav-link" href="{{path('list_payments', {'id':app.user.id})}}">Mis pagos</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{path('user_edit', {'id':app.user.id})}}">Mis datos</a>
@@ -28,7 +28,7 @@
         {% endif %}
         {% if app.user.role == 'ROLE_ADMIN' %}
           <li class="nav-item">
-            <a class="nav-link" href="#">Usuarios</a>
+            <a class="nav-link" href="{{path('list_users', {'role':'ROLE_USER'})}}">Usuarios</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{path('antennas')}}">Antenas</a>
@@ -37,7 +37,7 @@
             <a class="nav-link" href="#">Routers</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{{path('all_payments')}}">Pagos</a>
+            <a class="nav-link" href="{{path('list_payments')}}">Pagos</a>
           </li>
         {% endif %}
       </ul>
