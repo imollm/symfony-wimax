@@ -4,9 +4,16 @@ namespace App\Repository;
 
 use App\Entity\User;
 
+
 class PaymentRepository
 {
-    public static function findYears($connection, $role, $userId)
+    /**
+     * @param $connection
+     * @param $role
+     * @param $userId
+     * @return mixed
+     */
+    public static function findYears($connection, $role, $userId): mixed
     {
         $sql = "SELECT year FROM payments ";
         if ($role == 'ROLE_USER') {
@@ -19,7 +26,11 @@ class PaymentRepository
         return $prepare->fetchAll();
     }
 
-    public static function findUsers($connection)
+    /**
+     * @param $connection
+     * @return mixed
+     */
+    public static function findUsers($connection): mixed
     {
         $sql = "SELECT u.id, CONCAT(u.name,' ',u.surname) as 'user' 
                 FROM payments p 
@@ -32,7 +43,12 @@ class PaymentRepository
         return $prepare->fetchAll();
     }
 
-    public static function getTotalPaidByUserId($connection, $user_id)
+    /**
+     * @param $connection
+     * @param $user_id
+     * @return mixed
+     */
+    public static function getTotalPaidByUserId($connection, $user_id): mixed
     {
         $sql = "SELECT SUM(amount) AS 'total' FROM payments WHERE user_id = ".$user_id; 
         $prepare = $connection->prepare($sql);
@@ -40,6 +56,10 @@ class PaymentRepository
         return $prepare->fetch();
     }
 
+    /**
+     * @param $connection
+     * @param User $user
+     */
     public static function deleteAllPaymentsByUserId($connection, User $user)
     {
         $sql = "DELETE FROM payments WHERE user_id = ".$user->getId(); 
@@ -47,7 +67,11 @@ class PaymentRepository
         $prepare->execute();
     }
 
-    public static function getAllPayments($connection)
+    /**
+     * @param $connection
+     * @return mixed
+     */
+    public static function getAllPayments($connection): mixed
     {
         $sql = "SELECT  p.month, 
                         p.year, 
@@ -65,7 +89,12 @@ class PaymentRepository
         return $prepare->fetchAll();
     }
 
-    public static function getPayments($connection, $filters)
+    /**
+     * @param $connection
+     * @param $filters
+     * @return mixed
+     */
+    public static function getPayments($connection, $filters): mixed
     {
         $role = $filters['role'];
         $userId = $filters['userId']; // GET param
@@ -117,9 +146,9 @@ class PaymentRepository
      * @param $month
      * @param $year
      * @param $connection
-     * @return bool
+     * @return bool - TRUE if exists, FALSE otherwise
      */
-    public static function isAlreadyPaid($userId, $antennaId, $month, $year, $connection)
+    public static function isAlreadyPaid($userId, $antennaId, $month, $year, $connection): bool
     {
         $sql = "SELECT COUNT(*) as 'count'
                 FROM payments 
