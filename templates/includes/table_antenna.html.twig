@@ -1,6 +1,6 @@
 {% set absolutUrl = 'http://wimax.com.devel/' %}
 {% set mapsUrl = 'https://maps.google.com/?q=' %}
-{% set count = 1 %}
+{% set count = 0 %}
         
 {% for antenna in antennas %}
 
@@ -11,12 +11,16 @@
         {% set mode = 'Station' %}
     {% endif %}
 
-    {% if count == 1 or count is divisible by (3) %}
+    {% if count != 0 and count is divisible by (4) %}
+        </div>
+    {% endif %}
+
+    {% if count is divisible by (4) %}
     <div class="row mb-3">
     {% endif %}
-        <div class="col-4">
+        <div class="col-lg-3 col-md-6 col-xs-12">
          
-            <div class="card" style="width: 18rem;">
+            <div class="card">
                 <img src="{{path('get_antenna_image', {'file':antenna.model})}}" class="card-img-top" alt="">
                 <div class="card-body">
                     <h5 class="card-title">{{antenna.name}}</h5>
@@ -35,14 +39,11 @@
             </div>
 
         </div>
-    {% if count is divisible by (3) %}
-    </div>
-    {% endif %}
 
     {% set count = count + 1 %}
 
 {% endfor %}
 
-{% if count is divisible by (3) %}
+{% if count is divisible by (4) %}
     </div>
 {% endif %}
