@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -16,9 +15,9 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 
 class EmailController extends AbstractController
 {
-    private static $name = 'Ivan Moll Moll';
-    private static $from = 'ivanmoll07@gmail.com';
-    private $mailer;
+    private static string $name = 'Ivan Moll Moll';
+    private static string $from = 'ivanmoll07@gmail.com';
+    private MailerInterface $mailer;
 
     public function __construct(MailerInterface $mailer)
     {
@@ -31,7 +30,7 @@ class EmailController extends AbstractController
      * @return RedirectResponse
      * @throws TransportExceptionInterface
      */
-    public function paymentDoIt(Request $request): RedirectResponse
+    public function sendEmailPayment(Request $request): RedirectResponse
     {
         if ($request)
         {
@@ -67,6 +66,7 @@ class EmailController extends AbstractController
 
     /**
      * @Route ("/email/payment/template", name="emailPaymentTemplate")
+     * @return Response
      * @throws TransportExceptionInterface
      */
     public function sendTemplate(): Response
@@ -81,7 +81,7 @@ class EmailController extends AbstractController
 
             // pass variables (name => value) to the template
             ->context([
-                'expiration_date' => new \DateTime('+7 days'),
+                'date' => new \DateTime('now'),
                 'username' => 'foo',
             ]);
 
