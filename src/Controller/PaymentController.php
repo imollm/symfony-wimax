@@ -9,15 +9,19 @@ use App\Repository\AntennaRepository;
 use App\Repository\PaymentRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class PaymentController extends AbstractController
 {
     /**
      * @Route("/payments/{id}", defaults={"id" = null}, name="list_payments")
+     * @param Request $request
+     * @return Response
      */
-    public function list(Request $request)
+    public function list(Request $request): Response
     {   
         $pageData = array(
             'title' => '',
@@ -35,7 +39,6 @@ class PaymentController extends AbstractController
         }elseif ($role == 'ROLE_ADMIN' && $request->get('id') == NULL) {
             $userId = NULL;
         }
-        // var_dump($userId);die();
 
         $filters = array(
             'role' => $role,
@@ -75,8 +78,9 @@ class PaymentController extends AbstractController
 
     /**
      * @Route("/payment/create", name="create_payment")
+     * @return Response
      */
-    public function create(Request $request)
+    public function create(): Response
     {
         return $this->render('payment/create.html.twig', [
             'title' => 'Create payment',
@@ -86,25 +90,21 @@ class PaymentController extends AbstractController
 
     /**
      * @Route("/payment/save", name="save_payment")
+     * @param Request $request
+     * @return RedirectResponse
      */
-    public function save(Request $request)
+    public function save(Request $request): RedirectResponse
     {
         $payment = new Payment();
         if ($request) {
-            // var_dump($request);
             $antennaId = $request->get('antenna');
-            $userId = $request->get('user');
+            $userId = $request->get('user_id');
             $month = $request->get('month');
             $year = $request->get('year');
             $amount = $request->get('amount');
             $token = $request->get('token');
-            // var_dump($antennaId);
-            // var_dump($userId);
-            // var_dump($month);
-            // var_dump($year);
-            // var_dump($amount);
-            // var_dump($token);
-            if ($this->isCsrfTokenValid('save-payment', $token)) {
+            if ($this->isCsrfTokenValid('save-payment', $token))
+            {
                 if (
                     !is_null($antennaId) &&
                     !is_null($userId) &&
@@ -112,33 +112,46 @@ class PaymentController extends AbstractController
                     !is_null($year) &&
                     !is_null($amount)
                 ) {
-                    $antennaRepo = new AntennaRepository($this->getDoctrine());
-                    $antenna = $antennaRepo->findById($antennaId);
-                    $payment->setAntenna($antenna);
-                    // var_dump($antenna);
-                    $userRepo = new UserRepository($this->getDoctrine());
-                    $user = $userRepo->findById($userId);
-                    $payment->setUser($user);
-                    // var_dump($user);die();
-                    $payment->setMonth($month);
-                    $payment->setYear($year);
-                    $payment->setAmount($amount);
-                    $payment->setCreatedAt(new \DateTime());
-                    $payment->setUpdatedAt(new \DateTime());
+                    if (! PaymentRepository::isAlreadyPaid($userId, $antennaId, $month, $year, $this->getDoctrine()->getConnection()))
+                    {
+                        $antennaRepo = new AntennaRepository($this->getDoctrine());
+                        $antenna = $antennaRepo->findById($antennaId);
+                        $payment->setAntenna($antenna);
 
-                    $em = $this->getDoctrine()->getManager();
-                    $em->persist($payment);
-                    $em->flush();
+                        $userRepo = new UserRepository($this->getDoctrine());
+                        $user = $userRepo->findById($userId);
+                        $payment->setUser($user);
+                        $payment->setMonth($month);
+                        $payment->setYear($year);
+                        $payment->setAmount($amount);
+                        $payment->setCreatedAt(new \DateTime());
+                        $payment->setUpdatedAt(new \DateTime());
+
+                        $em = $this->getDoctrine()->getManager();
+                        $em->persist($payment);
+                        $em->flush();
+
+                        return $this->redirectToRoute('sendEmailPayment', [
+                            'userName' => $user->getName(),
+                            'userSurname' => $user->getSurname(),
+                            'userEmail' => $user->getEmail(),
+                            'paymentMonth' => $payment->getMonth(),
+                            'paymentYear' => $payment->getYear(),
+                            'paymentAmount' => $payment->getAmount()
+                        ]);
+
+                    } else {
+                     $this->addFlash('warning', 'Cuidado, el pago ya existe');
+                    }
                 } else {
-                    $this->addFlash('danger', 'Error al guardar el pago');
+                    $this->addFlash('danger', 'Error al guardar el pago, error params');
                 }
             } else {
-                $this->addFlash('danger', 'Error al guardar el pago');
+                $this->addFlash('danger', 'Error al guardar el pago, error form token');
             }
         } else {
-            $this->addFlash('danger', 'Error al guardar el pago');
+            $this->addFlash('danger', 'Error al guardar el pago, error request');
         }
-        // die();
         return $this->redirectToRoute('home');
     }
 }
