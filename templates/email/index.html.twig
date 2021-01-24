@@ -9,5 +9,6 @@
         <li>From: {{ email.from[0].address }}</li>
         <li>To: {{ email.to[0].address }}</li>
         <li>Subject: {{ email.subject }}</li>
+        <li>Date: {{ date|date('d/m/Y') }}</li>
     </ul>
 </p>
