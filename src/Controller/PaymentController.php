@@ -132,9 +132,8 @@ class PaymentController extends AbstractController
                         $em->flush();
 
                         return $this->redirectToRoute('sendEmailPayment', [
-                            'userName' => $user->getName(),
-                            'userSurname' => $user->getSurname(),
-                            'userEmail' => $user->getEmail(),
+                            'user' => $user->getName() . ' ' . $user->getSurname(),
+                            'email' => $user->getEmail(),
                             'paymentMonth' => $payment->getMonth(),
                             'paymentYear' => $payment->getYear(),
                             'paymentAmount' => $payment->getAmount()
