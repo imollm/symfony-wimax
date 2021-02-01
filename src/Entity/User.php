@@ -2,8 +2,10 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -13,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="users", uniqueConstraints={@ORM\UniqueConstraint(name="UNIQ_8D93D649E7927C74", columns={"email"}), @ORM\UniqueConstraint(name="UNIQ_8D93D649F85E0677", columns={"username"}), @ORM\UniqueConstraint(name="UNIQ_8D93D649444F97DD", columns={"phone"})})
  * @ORM\Entity
  */
-class User implements UserInterface
+class User implements UserInterface, JsonSerializable
 {
     /**
      * @var int
@@ -22,7 +24,7 @@ class User implements UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $id;
+    private int $id;
 
     /**
      * @var string
@@ -41,7 +43,7 @@ class User implements UserInterface
      *     message="Your name cannot contain a number"
      * )
      */
-    private $name;
+    private string $name;
 
     /**
      * @var string
@@ -60,14 +62,14 @@ class User implements UserInterface
      *     message="Your name cannot contain a number"
      * )
      */
-    private $surname;
+    private string $surname;
 
     /**
      * @var string
      *
      * @ORM\Column(name="role", type="string", length=50, nullable=true)
      */
-    private $role;
+    private string $role;
 
     /**
      * @var string
@@ -86,7 +88,7 @@ class User implements UserInterface
      *     message="Your phone cannot contain letters"
      * )
      */
-    private $phone;
+    private string $phone;
 
     /**
      * @var string
@@ -98,7 +100,7 @@ class User implements UserInterface
      *      allowEmptyString = false
      * )
      */
-    private $address;
+    private string $address;
 
     /**
      * @var string
@@ -109,7 +111,7 @@ class User implements UserInterface
      *     message = "The email '{{ value }}' is not a valid email."
      * )
      */
-    private $email;
+    private string $email;
 
     /**
      * @var string
@@ -128,28 +130,28 @@ class User implements UserInterface
      *     message="Your password must be at least, one uppercase letter, one lowercase letter, one number and one special character"
      * )
      */
-    private $password;
+    private string $password;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=false)
      */
-    private $createdAt;
+    private DateTime $createdAt;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="updated_at", type="datetime", nullable=false)
      */
-    private $updatedAt;
+    private DateTime $updatedAt;
 
     /**
      * @var bool
      *
      * @ORM\Column(name="is_active", type="boolean", nullable=false)
      */
-    private $isActive;
+    private bool $isActive;
 
     /**
      * @var \ArrayCollection
@@ -260,24 +262,24 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?\DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(\DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeInterface
+    public function getUpdatedAt(): ?\DateTime
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    public function setUpdatedAt(\DateTime $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
@@ -289,7 +291,7 @@ class User implements UserInterface
         return $this->antennas;
     }
 
-    public function setAntennas($antennas)
+    public function setAntennas($antennas): User
     {
         $this->antennas = $antennas;
 
@@ -323,7 +325,7 @@ class User implements UserInterface
         return null;
     }
 
-    public function getRoles()
+    public function getRoles(): array
     {
         return array($this->getRole());
     }
@@ -331,5 +333,19 @@ class User implements UserInterface
     public function eraseCredentials()
     {
         
+    }
+
+    public function jsonSerialize(): array
+    {
+        // TODO: Implement jsonSerialize() method.
+        return [
+            'id'=>$this->id,
+            'name'=>$this->name,
+            'surname'=>$this->surname,
+            'email'=>$this->email,
+            'phone'=>$this->phone,
+            'address'=>$this->address,
+            'role'=>$this->role
+        ];
     }
 }
