@@ -55,7 +55,6 @@ class PaymentController extends AbstractController
         $connection = $this->getDoctrine()->getConnection();
 
         if ($role == 'ROLE_ADMIN') {
-            $pageData['title'] = 'Listado pagos';
             if ($request->get('id') !== NULL) {
                 $userRepo = new UserRepository($this->getDoctrine());
                 $user = $userRepo->findById($request->get('id'));
@@ -66,10 +65,10 @@ class PaymentController extends AbstractController
             $pageData['users'] = PaymentRepository::findUsers($connection);
             
         } elseif ($role == 'ROLE_USER') {
-            $pageData['title'] = 'Listado pagos';
             $pageData['header'] = 'Mis pagos';
         }
 
+        $pageData['title'] = 'Listado pagos';
         $pageData['years'] = PaymentRepository::findYears($connection, $role, $userId);
         $pageData['payments'] = PaymentRepository::getPayments($connection, $filters);
 
