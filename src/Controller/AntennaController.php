@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Antenna;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,7 +17,7 @@ class AntennaController extends AbstractController
     /**
      * @Route("/antennas", name="antennas")
      */
-    public function index()
+    public function index(): Response
     {
         $antennasRepo= $this->getDoctrine()->getRepository(Antenna::class);
         $antennas = $antennasRepo->findAll();
@@ -30,6 +31,8 @@ class AntennaController extends AbstractController
 
     /**
      * @Route("/antenna/{id}/details", name="antenna_details")
+     * @param Antenna $antenna
+     * @return RedirectResponse | Response
      */
     public function details(Antenna $antenna)
     {
@@ -47,8 +50,10 @@ class AntennaController extends AbstractController
 
     /**
      * @Route("/getImage/{file}", name="get_antenna_image")
+     * @param Request $request
+     * @return BinaryFileResponse
      */
-    public function getImage(Request $request)
+    public function getImage(Request $request): BinaryFileResponse
     {
         if($request){
             $fileName = $request->attributes->get('file');
