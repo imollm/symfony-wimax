@@ -9,17 +9,21 @@ use App\Form\UpdateUserType;
 use App\Repository\AntennaRepository;
 use App\Repository\PaymentRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Throwable;
 
 class UserController extends AbstractController
 {
     /**
      * @Route("/user", name="user")
+     * @return Response
      */
-    public function index()
+    public function index(): Response
     {
         return $this->render('user/index.html.twig', [
             'controller_name' => 'UserController',
@@ -28,6 +32,9 @@ class UserController extends AbstractController
 
     /**
      * @Route("/user/register", name="user_register")
+     * @param Request $request
+     * @param UserPasswordEncoderInterface $encoder
+     * @return RedirectResponse|Response
      */
     public function register(Request $request, UserPasswordEncoderInterface $encoder)
     {
@@ -35,24 +42,36 @@ class UserController extends AbstractController
         $form = $this->createForm(RegisterUserType::class, $user);
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
+            $userRepo = $this->getDoctrine()->getRepository(User::class);
+            $userEmail = $request->request->get('register_user')['email'];
+            $userPhone = $request->request->get('register_user')['phone'];
+            $emailExists = is_object($userRepo->findOneBy(['email' => $userEmail]));
+            $phoneExists = is_object($userRepo->findOneBy(['phone' => $userPhone]));
 
-            $user->setRole('ROLE_USER');
-            $user->setCreatedAt(new \DateTime('now'));
-            $user->setUpdatedAt(new \DateTime('now'));
+            // Check if email and phone exists
+            if (!$emailExists && !$phoneExists) {
+                $user->setRole('ROLE_USER');
+                $user->setCreatedAt(new \DateTime('now'));
+                $user->setUpdatedAt(new \DateTime('now'));
 
-            $encoded = $encoder->encodePassword($user, $user->getPassword());
-            $user->setPassword($encoded);
-            
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
+                $encoded = $encoder->encodePassword($user, $user->getPassword());
+                $user->setPassword($encoded);
 
-            $this->addFlash('notice', 'Usuario agregado correctamente');
-            $this->addFlash('class', 'success');
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($user);
+                $em->flush();
 
-            return $this->redirectToRoute('home');
-
+                return $this->redirectToRoute('sendEmailRegisteredUser', [
+                    'user' => $user->getName() . ' ' . $user->getSurname(),
+                    'email' => $user->getEmail(),
+                    'phone' => $user->getPhone(),
+                    'address' => $user->getAddress()
+                ]);
+            } else {
+                $this->addFlash('danger', 'El usuario ya esta registrado, email o telefono ya registrado');
+                return $this->redirectToRoute('home');
+            }
         }
 
         return $this->render('user/register.html.twig', [
@@ -64,8 +83,11 @@ class UserController extends AbstractController
 
     /**
      * @Route("/user/edit/{id}/", name="user_edit")
+     * @param Request $request
+     * @param User $user
+     * @return RedirectResponse|Response
      */
-    public function edit(Request $request, User $user)
+    public function edit(Request $request, User $user): RedirectResponse
     {
         if (!$this->getUser() || $this->getUser()->getId() != $user->getId()) {
             return $this->redirectToRoute('home');
@@ -77,7 +99,7 @@ class UserController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){
 
             $user->setUpdatedAt(new \DateTime('now'));
-            
+
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
@@ -100,8 +122,10 @@ class UserController extends AbstractController
 
     /**
      * @Route("/users", name="list_users")
+     * @param Request $request
+     * @return Response
      */
-    public function listAllUsers(Request $request)
+    public function listAllUsers(Request $request): Response
     {
         $role = $request->query->get('role');
         $users = $this->getDoctrine()
@@ -118,27 +142,31 @@ class UserController extends AbstractController
     /**
      * @Route("/getUsers", name="get_users")
      */
-    public function getUsers() {
-        $connection = $this->getDoctrine()->getConnection();
-        $sql = "SELECT id, name FROM users WHERE role = 'ROLE_USER'";
-        $prepare = $connection->prepare($sql);
-        $prepare->execute();
-        $users = $prepare->fetchAll();
-        
-        return $this->json(json_encode($users), 200);
+    public function getUsers(): JsonResponse
+    {
+        $users = $this->getDoctrine()->getRepository(User::class)->findAll();
+        $json = [];
+        foreach ($users as $user)
+        {
+            $json[] = $user->jsonSerialize();
+        }
+        return $this->json(json_encode($json));
     }
+
     /**
      * @Route("/user/{id}/details", name="user_details")
+     * @param $id
+     * @return Response
      */
-    public function details($id)
+    public function details($id): Response
     {
         $user = $this->getDoctrine()
-                    ->getRepository(User::class)
-                    ->find($id);
+            ->getRepository(User::class)
+            ->find($id);
 
         $connection = $this->getDoctrine()->getConnection();
         $totalPaid = PaymentRepository::getTotalPaidByUserId($connection, $user->getId());
-        
+
         return $this->render('user/details.html.twig', [
             'title' => 'User Details',
             'header' => 'Detalles del usuario',
@@ -149,10 +177,14 @@ class UserController extends AbstractController
 
     /**
      * @Route("/user/delete/{id}", name="user_delete")
+     * @param Request $request
+     * @param User $user
+     * @return RedirectResponse
+     * @throws Throwable
      */
-    public function delete(Request $request, User $user)
+    public function delete(Request $request, User $user): RedirectResponse
     {
-        if(!$user){
+        if (!$user) {
             $this->addFlash('notice', 'Error al borrar el usuario');
             $this->addFlash('class', 'danger');
             return $this->redirectToRoute('home');
@@ -168,7 +200,7 @@ class UserController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->remove($user);
             $em->flush();
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             throw $th;
         }
 
@@ -182,8 +214,10 @@ class UserController extends AbstractController
 
     /**
      * @Route("/user/{id}/antennas", name="user_have_these_antennas")
+     * @param $id
+     * @return JsonResponse
      */
-    public function myAntennas($id)
+    public function myAntennas($id): JsonResponse
     {
         $antennaRepo = $this->getDoctrine()->getRepository(Antenna::class);
         $userRepo = $this->getDoctrine()->getRepository(User::class);
