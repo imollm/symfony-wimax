@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -9,8 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Antenna
  *
+ * @ORM\Entity(repositoryClass="App\Repository\AntennaRepository")
  * @ORM\Table(name="antennas", uniqueConstraints={@ORM\UniqueConstraint(name="wlan_mac_UNIQUE", columns={"wlan_mac"}), @ORM\UniqueConstraint(name="UNIQ_17B46F653EA3F4B", columns={"ip"}), @ORM\UniqueConstraint(name="UNIQ_17B46F64FECC1BF", columns={"lan_mac"})}, indexes={@ORM\Index(name="IDX_17B46F6A76ED395", columns={"user_id"})})
- * @ORM\Entity
  */
 class Antenna
 {
@@ -21,73 +22,73 @@ class Antenna
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $id;
+    private int $id;
 
     /**
      * @var string
      *
      * @ORM\Column(name="wlan_mac", type="string", length=17, nullable=false)
      */
-    private $wlanMac;
+    private string $wlanMac;
 
     /**
      * @var string
      *
      * @ORM\Column(name="lan_mac", type="string", length=17, nullable=false)
      */
-    private $lanMac;
+    private string $lanMac;
 
     /**
      * @var string|null
      *
      * @ORM\Column(name="ip", type="string", length=15, nullable=true)
      */
-    private $ip;
+    private ?string $ip;
 
     /**
      * @var string|null
      *
      * @ORM\Column(name="latitude", type="string", length=20, nullable=true)
      */
-    private $latitude;
+    private ?string $latitude;
 
     /**
      * @var string|null
      *
      * @ORM\Column(name="longitude", type="string", length=20, nullable=true)
      */
-    private $longitude;
+    private ?string $longitude;
 
     /**
      * @var string|null
      *
      * @ORM\Column(name="model", type="string", length=100, nullable=true)
      */
-    private $model;
+    private ?string $model;
 
     /**
      * @var string|null
      *
      * @ORM\Column(name="name", type="string", length=100, nullable=true)
      */
-    private $name;
+    private ?string $name;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="created_at", type="datetime", nullable=false)
      */
-    private $createdAt;
+    private DateTime $createdAt;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="updated_at", type="datetime", nullable=false)
      */
-    private $updatedAt;
+    private DateTime $updatedAt;
 
     /**
-     * @var \User
+     * @var User
      *
      * @ORM\ManyToOne(targetEntity="User", inversedBy="antennas")
      * @ORM\JoinColumns({
@@ -97,14 +98,14 @@ class Antenna
     private $user;
 
     /**
-     * @var \Ap
+     * @var Ap
      * 
      * @ORM\OneToMany(targetEntity=Ap::class, mappedBy="antenna")
      */
     private $ap;
 
     /**
-     * @var \Station
+     * @var Station
      * 
      * @ORM\OneToMany(targetEntity=Station::class, mappedBy="antenna")
      */
@@ -198,7 +199,7 @@ class Antenna
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -210,7 +211,7 @@ class Antenna
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    public function setUpdatedAt(DateTime $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
