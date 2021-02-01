@@ -140,11 +140,12 @@ class UserController extends AbstractController
     }
 
     /**
+     * Get users with ROLE_USER and he/she have a contract
      * @Route("/getUsers", name="get_users")
      */
     public function getUsers(): JsonResponse
     {
-        $users = $this->getDoctrine()->getRepository(User::class)->findAll();
+        $users = $this->getDoctrine()->getRepository(User::class)->findWithContract();
         $json = [];
         foreach ($users as $user)
         {
