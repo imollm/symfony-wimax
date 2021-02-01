@@ -36,6 +36,7 @@ class PaymentRepository
                 FROM payments p 
                 INNER JOIN users u 
                 ON p.user_id = u.id 
+                WHERE u.role <> 'ROLE_ADMIN' 
                 GROUP BY u.id";
 
         $prepare = $connection->prepare($sql);
@@ -133,7 +134,7 @@ class PaymentRepository
         if ($role == 'ROLE_ADMIN') {
             $sql .= ", u.name ASC";
         }
-        // var_dump($sql);die();
+
         $prepare = $connection->prepare($sql);
         $prepare->execute();
         return $prepare->fetchAll();
