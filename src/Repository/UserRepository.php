@@ -40,4 +40,18 @@ class UserRepository extends ServiceEntityRepository
     {
         return $this->getEntityManager()->find(User::class, $id);
     }
+
+    public function findWithContract()
+    {
+        $dql = "SELECT u
+                FROM App\Entity\User u
+                INNER JOIN App\Entity\Antenna a 
+                WITH u.id = a.user 
+                WHERE u.role = 'ROLE_USER'
+                GROUP BY u.id";
+
+        return $this->getEntityManager()
+            ->createQuery($dql)
+            ->getResult();
+    }
 }
